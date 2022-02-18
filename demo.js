@@ -6,73 +6,25 @@ require('chai').should();
 
 describe('Functional Programming', () => {
   describe('FP 101', () => {
-    it('uses lodash fp', () => {
-      map([1, 2, 3], (d) => d * 2).should.eql([2, 4, 6]);
-      mapFp((d) => d * 2, [1, 2, 3]).should.eql([2, 4, 6]);
-      mapFp(_.multiply(2), [1, 2, 3]).should.eql([2, 4, 6]);
-    });
-
-    it('refresh on closure and currying', () => {
-      const itAddsThree = (a) => (b) => (c) => a + b + c;
-      itAddsThree(1)(2)(3).should.eql(6);
-
-      const itCurrys = _.curry((a, b, c) => a + b + c);
-      itCurrys(1)(2)(3).should.eql(6);
-      itCurrys(1, 2)(3).should.eql(6);
-      itCurrys(1)(2, 3).should.eql(6);
-      itCurrys(1, 2, 3).should.eql(6);
-    });
-
-    it('functional pipelines', () => {
-      // f(g(x)))
-      const f = x => x + 1;
-      const g = x => x * 5;
-      f(g(1)).should.eql(6);
-      _.compose(f, g)(1).should.eql(6);
-
-      g(f(1)).should.eql(10);
-      _.flow(f, g)(1).should.eql(10);
-
-    });
+    it('should explain the difference between lodash and lodash/fp', () => {});
+    it('refresh on closure and currying', () => {});
+    it('functional pipelines', () => {});
   });
 
   describe('Basic Examples', () => {
-    const isActive = _.get('isActive')
-    const isOver30 = _.flow(
-      _.get('age'),
-      (age) => age > 30
-    )
-
-    const activeOverThirty = _.flow(
-      _.filter(_.overEvery([isActive, isOver30])),
-      _.map(_.get('name.first'))
-    );
-
+    const activeOverThirty = _.identity
     it('first names of isActive=true and age > 30', () => {
       activeOverThirty(testData).should.eql(['Paval']);
     });
 
     const excludedTags = ['director', 'Software 3'];
-
-    const isExcludedTag = (tag) => _.some(_.isEqual(tag), excludedTags);
-    const filterExcludedTags = _.flow(
-      _.reject(
-        _.flow(
-          _.get('tags'),
-          _.some(isExcludedTag))
-        ),
-      _.map('name.first')
-    );
+    const filterExcludedTags = _.identity
 
     it('first names, reject any with excluded tags', () => {
       filterExcludedTags(testData).should.eql(['Ian']);
     });
 
-    const makeEmailHref = _.flow(
-      _.map('email'),
-      _.join(';'),
-      _.add('mailto:'),
-    );
+    const makeEmailHref = _.identity
     it('send an email to everybody', () => {
       const expectedResult = 'mailto:ian.pfeffer@pax8.com;chris.smoak@pax8.com;paval.volchak@pax8.com'
       makeEmailHref(testData).should.eql(expectedResult);
@@ -117,10 +69,7 @@ describe('Functional Programming', () => {
       'clu hlt io '
     ]
 
-    const cleanInput = _.flow(
-      _.toLower,
-      _.replace(/[\s,!.]/g, '')
-    );
+    const cleanInput = _.identity;
     it('should clean input', () => {
       cleanInput('HELLo!!!  ,,,.').should.eql('hello');
     });
@@ -129,26 +78,13 @@ describe('Functional Programming', () => {
     // hint
     // rows = floor of square root of length
     // columns = ceiling of length / rows
-    const determineNumberOfColumns = (input) => {
-      const length = input.length;
-      const columnsFor = _.flow(
-        Math.floor,
-        Math.sqrt,
-        _.divide(length),
-        Math.ceil,
-      );
-      return columnsFor(length);
-    };
-
+    const determineNumberOfColumns = _.identity;
     it('determine number of columns', () => {
       const checkColumns = _.map(_.flow(cleanInput, determineNumberOfColumns));
       checkColumns(inputs).should.eql([8, 4, 4, 3]);
     });
 
-    const turnIntoSquare = (numberOfColumns) => _.flow(
-      _.chunk(numberOfColumns),
-      _.map(_.join(''))
-    );
+    const turnIntoSquare = _.always(_.identity);
     it('turn input into square', () => {
       const input = 'haveaniceday';
       turnIntoSquare(4)(input).should.eql([
@@ -159,7 +95,13 @@ describe('Functional Programming', () => {
     });
 
 
+    // [1, 1, 1]
+    // [2, 2, 2]
+    // [3, 3, 3]
 
+    // [1, 2, 3]
+    // [1, 2, 3]
+    // [1, 2, 3]
     it('explains zip', () => {
       _.zip(
         [1, 2, 3],
@@ -173,20 +115,7 @@ describe('Functional Programming', () => {
       );
     })
 
-    // [1, 1, 1]
-    // [2, 2, 2]
-    // [3, 3, 3]
-
-    // [1, 2, 3]
-    // [1, 2, 3]
-    // [1, 2, 3]
-
-    const transposeSquare = _.flow(
-      _.map(_.toArray),
-      _.unzip,
-      _.map(_.join(''))
-    );
-
+    const transposeSquare = _.identity;
     it('should transpose the square', () => {
       const input = [
         'have',
@@ -201,18 +130,7 @@ describe('Functional Programming', () => {
       ]);
     });
 
-    const fillSpaces = (columns) => {
-      return _.map((input) => {
-        if(input.length === columns) return input;
-        const fillEm = _.flow(
-          (input) => columns - input.length,
-          _.times(_.always(' ')),
-          _.concat(input),
-          _.join('')
-        )
-        return fillEm(input);
-      });
-    }
+    const fillSpaces = _.always(_.identity);
 
     it('should fill spaces', () => {
       const unevenInput = [
@@ -228,17 +146,7 @@ describe('Functional Programming', () => {
     });
 
 
-    const encode = (input) => {
-      const cleanedInput = cleanInput(input);
-      const columns = determineNumberOfColumns(cleanedInput);
-      const encodeInput = _.flow(
-        turnIntoSquare(columns),
-        fillSpaces(columns),
-        transposeSquare,
-        _.join(' ')
-      );
-      return encodeInput(cleanedInput);
-    }
+    const encode = _.identity;
     it('should encode the message', () => {
       _.map(encode, inputs).should.eql(outputs);
     });
