@@ -94,6 +94,21 @@ describe('Functional Programming', () => {
       ]);
     });
 
+    const fillSpaces = _.always(_.identity);
+
+    it('should fill spaces', () => {
+      const unevenInput = [
+        'feed',
+        'thed',
+        'og',
+      ];
+      fillSpaces(4)(unevenInput).should.eql([
+        'feed',
+        'thed',
+        'og  '
+      ]);
+    });
+
 
     // [1, 1, 1]
     // [2, 2, 2]
@@ -129,22 +144,6 @@ describe('Functional Programming', () => {
         'ecy'
       ]);
     });
-
-    const fillSpaces = _.always(_.identity);
-
-    it('should fill spaces', () => {
-      const unevenInput = [
-        'feed',
-        'thed',
-        'og',
-      ];
-      fillSpaces(4)(unevenInput).should.eql([
-        'feed',
-        'thed',
-        'og  '
-      ]);
-    });
-
 
     const encode = _.identity;
     it('should encode the message', () => {

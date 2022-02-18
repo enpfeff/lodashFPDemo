@@ -158,7 +158,31 @@ describe('Functional Programming', () => {
       ]);
     });
 
+    const fillSpaces = (columns) => {
+      return _.map((input) => {
+        if(input.length === columns) return input;
+        const fillEm = _.flow(
+          (input) => columns - input.length,
+          _.times(_.always(' ')),
+          _.concat(input),
+          _.join('')
+        )
+        return fillEm(input);
+      });
+    }
 
+    it('should fill spaces', () => {
+      const unevenInput = [
+        'feed',
+        'thed',
+        'og',
+      ];
+      fillSpaces(4)(unevenInput).should.eql([
+        'feed',
+        'thed',
+        'og  '
+      ]);
+    });
 
     it('explains zip', () => {
       _.zip(
@@ -201,33 +225,6 @@ describe('Functional Programming', () => {
       ]);
     });
 
-    const fillSpaces = (columns) => {
-      return _.map((input) => {
-        if(input.length === columns) return input;
-        const fillEm = _.flow(
-          (input) => columns - input.length,
-          _.times(_.always(' ')),
-          _.concat(input),
-          _.join('')
-        )
-        return fillEm(input);
-      });
-    }
-
-    it('should fill spaces', () => {
-      const unevenInput = [
-        'feed',
-        'thed',
-        'og',
-      ];
-      fillSpaces(4)(unevenInput).should.eql([
-        'feed',
-        'thed',
-        'og  '
-      ]);
-    });
-
-
     const encode = (input) => {
       const cleanedInput = cleanInput(input);
       const columns = determineNumberOfColumns(cleanedInput);
@@ -242,6 +239,5 @@ describe('Functional Programming', () => {
     it('should encode the message', () => {
       _.map(encode, inputs).should.eql(outputs);
     });
-
   });
 });
