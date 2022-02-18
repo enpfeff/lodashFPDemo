@@ -1,0 +1,48 @@
+[
+  {
+    "isActive": false,
+    "balance": "$2,006.43",
+    "age": 34,
+    "name": {
+      "first": "Ian",
+      "last": "Pfeffer"
+    },
+    "email": "ian.pfeffer@pax8.com",
+    "tags": [
+      "ex",
+      "ad",
+      "custom_tag",
+      "manager"
+    ]
+  },
+  {
+    "isActive": true,
+    "balance": "$133.54",
+    "age": 29,
+    "name": {
+      "first": "Chris",
+      "last": "Smoak"
+    },
+    "email": "chris.smoak@pax8.com",
+    "tags": [
+      "ex",
+      "ad",
+      "director"
+    ]
+  },
+  {
+    "isActive": true,
+    "balance": "$1,330.54",
+    "age": 32,
+    "name": {
+      "first": "Paval",
+      "last": "Volchak"
+    },
+    "email": "paval.volchak@pax8.com",
+    "tags": [
+      "ex",
+      "Software 3",
+      "IC"
+    ]
+  }
+]
